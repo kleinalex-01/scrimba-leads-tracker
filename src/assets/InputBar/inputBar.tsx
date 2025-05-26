@@ -36,13 +36,11 @@ export const InputBar = ({item, setItem}: Props) => {
                 </div>
 
                 <div className="row g-2">
-                    <div className="col-4">
+                    <div className="col-6">
                         <button type="submit" className="btn btn-success w-100">Save Input</button>
                     </div>
-                    <div className="col-4">
-                        <button type="button" className="btn btn-success w-100">Save Tab</button>
-                    </div>
-                    <div className="col-4">
+                    
+                    <div className="col-6">
                         <button type="button" onClick={deleteAll} className="btn btn-light border-success w-100">Delete All</button>
                     </div>
                 </div>
