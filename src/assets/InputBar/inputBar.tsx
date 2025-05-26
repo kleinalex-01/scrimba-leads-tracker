@@ -51,15 +51,21 @@ export const InputBar = ({item, setItem}: Props) => {
 
         <div className="container">
             <div className="row">
-                <div className="col-6">
-                    {item.map(item => {
+                    {item.map((word,index) => {
                         return(
                             <>
-                                <li key={item} className="h1">{item}</li>
+                            <div className="col-12 d-flex w-100 justify-content-between mt-3">
+                                <li key={index} className="h1">{word}</li>
+                                <button type="button"
+                                        className="btn btn-danger"
+                                        onClick={() => {
+                                            setItem(item.filter((_, idx) => idx !== index))
+                                        }}
+                                        >Delete</button>
+                            </div>
                             </>
                         )
                     })}
-                </div>
             </div>
         </div>
         </>
