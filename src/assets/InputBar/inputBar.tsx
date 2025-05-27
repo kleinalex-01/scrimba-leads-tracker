@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { push } from "firebase/database";
+import { useEffect, useState } from "react";
+import { push, onValue } from "firebase/database";
 import { refDatabase } from "../../firebaseConfig";
 
 interface Props {
@@ -8,6 +8,7 @@ interface Props {
 }
 export const InputBar = ({item, setItem}: Props) => {
     const [inputVal, setInputVal] = useState<string>("")
+    const [databaseItems, setDatabaseItems] = useState<string[]>([])
     const addItem = (e: React.FormEvent) => {
         e.preventDefault()
         if (inputVal.trim() === "") return
@@ -20,6 +21,12 @@ export const InputBar = ({item, setItem}: Props) => {
     const deleteAll = () => {
         setItem([])
     }
+
+    useEffect(() => {
+        onValue(refDatabase, (snapshot) => {
+            setDatabaseItems(Object.values(snapshot.val()))
+        })
+    }, [])
 
     return (
         <>
@@ -44,6 +51,8 @@ export const InputBar = ({item, setItem}: Props) => {
 
                     <div className="col-4">
                         <button type="button" onClick={() => {
+                            if (inputVal.trim() === "") return
+                            setDatabaseItems([...item, inputVal])
                             push(refDatabase, inputVal)
                             setInputVal("")
                         }} className="btn btn-success w-100">Save in DB</button>
@@ -54,6 +63,16 @@ export const InputBar = ({item, setItem}: Props) => {
                     </div>
                 </div>
             </form>
+        </div>
+
+        <div>
+            {databaseItems.map(item => {
+                return(
+                    <>
+                        <li>{item}</li>
+                    </>
+                )
+            })}
         </div>
 
         <div className="container">
