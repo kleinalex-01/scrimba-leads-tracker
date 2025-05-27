@@ -1,7 +1,7 @@
 import './App.css'
 import { useState, useEffect } from 'react'
 import { getAnalytics } from "firebase/analytics";
-import { firebaseApp, database } from './firebaseConfig'
+import { firebaseApp, database, refDatabase } from './firebaseConfig'
 import { InputBar } from './assets/InputBar/inputBar'
 function App() {
   

@@ -1,4 +1,6 @@
 import { useState } from "react";
+import { push } from "firebase/database";
+import { refDatabase } from "../../firebaseConfig";
 
 interface Props {
     item: string[];
@@ -36,11 +38,18 @@ export const InputBar = ({item, setItem}: Props) => {
                 </div>
 
                 <div className="row g-2">
-                    <div className="col-6">
+                    <div className="col-4">
                         <button type="submit" className="btn btn-success w-100">Save Input</button>
                     </div>
+
+                    <div className="col-4">
+                        <button type="button" onClick={() => {
+                            push(refDatabase, inputVal)
+                            setInputVal("")
+                        }} className="btn btn-success w-100">Save in DB</button>
+                    </div>
                     
-                    <div className="col-6">
+                    <div className="col-4">
                         <button type="button" onClick={deleteAll} className="btn btn-light border-success w-100">Delete All</button>
                     </div>
                 </div>
