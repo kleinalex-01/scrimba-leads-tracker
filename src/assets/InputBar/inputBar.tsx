@@ -1,32 +1,44 @@
 import { useEffect, useState } from "react";
-import { push, onValue } from "firebase/database";
+import { push, ref, child, set, onValue, remove} from "firebase/database";
 import { refDatabase } from "../../firebaseConfig";
 
-interface Props {
-    item: string[];
-    setItem: React.Dispatch<React.SetStateAction<string[]>>
-}
-export const InputBar = ({item, setItem}: Props) => {
+export const InputBar = () => {
     const [inputVal, setInputVal] = useState<string>("")
-    const [databaseItems, setDatabaseItems] = useState<string[]>([])
-    const addItem = (e: React.FormEvent) => {
+    const [databaseItems, setDatabaseItems] = useState<{ id: string, text: string}[]>([])
+
+    useEffect(() => {
+        const unsubscribe = onValue(refDatabase, (snapshot) => {
+            const data = snapshot.val()
+            if (!data) {
+                setDatabaseItems([])
+                return
+            }
+            const items = Object.entries(data).map(([_, value]) => value) as { id: string, text: string}[];
+            setDatabaseItems(items)
+        })
+        return () => unsubscribe();
+    }, [])
+
+    const addItem = async (e: React.FormEvent) => {
         e.preventDefault()
         if (inputVal.trim() === "") return
-
-        setItem([...item, inputVal])
-
+        const newRef = push(refDatabase)
+        const id = newRef.key
+        await set(newRef, {
+            id,
+            text: inputVal
+        })
         setInputVal("")
     }
 
     const deleteAll = () => {
-        setItem([])
+        remove(refDatabase)
     }
 
-    useEffect(() => {
-        onValue(refDatabase, (snapshot) => {
-            setDatabaseItems(Object.values(snapshot.val()))
-        })
-    }, [])
+    const deleteItem = (id:string) => {
+        const itemRef = child(refDatabase, id)
+        remove(itemRef)
+    }
 
     return (
         <>
@@ -45,53 +57,39 @@ export const InputBar = ({item, setItem}: Props) => {
                 </div>
 
                 <div className="row g-2">
-                    <div className="col-4">
-                        <button type="submit" className="btn btn-success w-100">Save Input</button>
-                    </div>
 
-                    <div className="col-4">
-                        <button type="button" onClick={() => {
-                            if (inputVal.trim() === "") return
-                            setDatabaseItems([...item, inputVal])
-                            push(refDatabase, inputVal)
-                            setInputVal("")
-                        }} className="btn btn-success w-100">Save in DB</button>
+                    <div className="col-6">
+                        <button type="submit" className="btn btn-success w-100">Save in DB</button>
                     </div>
                     
-                    <div className="col-4">
-                        <button type="button" onClick={deleteAll} className="btn btn-light border-success w-100">Delete All</button>
+                    <div className="col-6">
+                        <button type="button" onClick={deleteAll} className="btn btn-danger border-success w-100">Delete All</button>
                     </div>
                 </div>
             </form>
         </div>
 
         <div>
-            {databaseItems.map(item => {
-                return(
-                    <>
-                        <li>{item}</li>
-                    </>
-                )
-            })}
+
         </div>
 
         <div className="container">
             <div className="row">
-                    {item.map((word,index) => {
+                    {databaseItems.map((word,index) => {
                         return(
                             <>
                             <div className="col-12 d-flex w-100 justify-content-between mt-3">
-                                <li key={index} className="h1">{word}</li>
+                                <li key={index} className="h1">{word.text}</li>
                                 <button type="button"
                                         className="btn btn-danger"
                                         onClick={() => {
-                                            setItem(item.filter((_, idx) => idx !== index))
+                                            deleteItem(word.id)                                            
                                         }}
                                         >Delete</button>
                             </div>
                             </>
-                        )
-                    })}
+                            )
+                        })}
             </div>
         </div>
         </>
