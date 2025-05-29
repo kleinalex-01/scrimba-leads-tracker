@@ -13,7 +13,7 @@ export const InputBar = () => {
                 setDatabaseItems([])
                 return
             }
-            const items = Object.entries(data).map(([_, value]) => value) as { id: string, text: string}[];
+            const items = Object.entries(data).map(([,value]) => value) as { id: string, text: string}[];
             setDatabaseItems(items)
         })
         return () => unsubscribe();
