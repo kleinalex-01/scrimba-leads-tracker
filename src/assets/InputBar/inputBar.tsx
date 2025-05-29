@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { push, ref, child, set, onValue, remove} from "firebase/database";
+import { push, child, set, onValue, remove} from "firebase/database";
 import { refDatabase } from "../../firebaseConfig";
 
 export const InputBar = () => {
