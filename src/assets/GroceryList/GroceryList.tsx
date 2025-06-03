@@ -2,10 +2,11 @@ import { useEffect, useState } from "react";
 import { push, child, set, onValue, remove} from "firebase/database";
 import { refDatabase } from "../../firebaseConfig";
 
-export const InputBar = () => {
+export const GroceryList = () => {
     const [inputVal, setInputVal] = useState<string>("")
     const [databaseItems, setDatabaseItems] = useState<{ id: string, text: string}[]>([])
 
+    // Adatázis lekérése és State frissítése
     useEffect(() => {
         const unsubscribe = onValue(refDatabase, (snapshot) => {
             const data = snapshot.val()
@@ -19,6 +20,7 @@ export const InputBar = () => {
         return () => unsubscribe();
     }, [])
 
+    // Uj termék hozzáadása a listához
     const addItem = async (e: React.FormEvent) => {
         e.preventDefault()
         if (inputVal.trim() === "") return
@@ -31,10 +33,12 @@ export const InputBar = () => {
         setInputVal("")
     }
 
+    // Összes termék törlése a listából
     const deleteAll = () => {
         remove(refDatabase)
     }
 
+    // Egy termék törlése a listából
     const deleteItem = (id:string) => {
         const itemRef = child(refDatabase, id)
         remove(itemRef)
@@ -49,7 +53,7 @@ export const InputBar = () => {
                         <input
                           type="text"
                           className="form-control"
-                          placeholder="Eg. Mop floor..."
+                          placeholder="Kukorica, krumpli, hagyma, stb."
                           value={inputVal}
                           onChange={(e) => setInputVal(e.target.value)}
                         />
@@ -59,11 +63,11 @@ export const InputBar = () => {
                 <div className="row g-2">
 
                     <div className="col-6">
-                        <button type="submit" className="btn btn-success w-100">Save in DB</button>
+                        <button type="submit" className="btn btn-success w-100">Kajci hozzáadás</button>
                     </div>
                     
                     <div className="col-6">
-                        <button type="button" onClick={deleteAll} className="btn btn-danger border-success w-100">Delete All</button>
+                        <button type="button" onClick={deleteAll} className="btn btn-danger border-success w-100">Lista ürítése</button>
                     </div>
                 </div>
             </form>
@@ -85,7 +89,7 @@ export const InputBar = () => {
                                         onClick={() => {
                                             deleteItem(word.id)                                            
                                         }}
-                                        >Delete</button>
+                                        >Törlés</button>
                             </div>
                             </>
                             )
