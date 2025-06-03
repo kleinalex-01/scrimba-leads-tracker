@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { push, child, set, onValue, remove} from "firebase/database";
-import { refDatabase } from "../../firebaseConfig";
+import { TasksDatabase } from "../../firebaseConfig";
 
 export const GroceryList = () => {
     const [inputVal, setInputVal] = useState<string>("")
@@ -8,7 +8,7 @@ export const GroceryList = () => {
 
     // Adatázis lekérése és State frissítése
     useEffect(() => {
-        const unsubscribe = onValue(refDatabase, (snapshot) => {
+        const unsubscribe = onValue(TasksDatabase, (snapshot) => {
             const data = snapshot.val()
             if (!data) {
                 setDatabaseItems([])
@@ -24,7 +24,7 @@ export const GroceryList = () => {
     const addItem = async (e: React.FormEvent) => {
         e.preventDefault()
         if (inputVal.trim() === "") return
-        const newRef = push(refDatabase)
+        const newRef = push(TasksDatabase)
         const id = newRef.key
         await set(newRef, {
             id,
@@ -35,12 +35,12 @@ export const GroceryList = () => {
 
     // Összes termék törlése a listából
     const deleteAll = () => {
-        remove(refDatabase)
+        remove(TasksDatabase)
     }
 
     // Egy termék törlése a listából
     const deleteItem = (id:string) => {
-        const itemRef = child(refDatabase, id)
+        const itemRef = child(TasksDatabase, id)
         remove(itemRef)
     }
 

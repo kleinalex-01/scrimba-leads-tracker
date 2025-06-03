@@ -14,7 +14,8 @@ const firebaseConfig = {
 
 const firebaseApp = initializeApp(firebaseConfig);
 const database = getDatabase(firebaseApp);
-const refDatabase = ref(database, "tasks");
+const TasksDatabase = ref(database, "tasks");
+const iconsDatabase = ref(database, "searchSuggestion");
 
 
-export {firebaseApp, database, refDatabase}
+export {firebaseApp, database, TasksDatabase, iconsDatabase};
