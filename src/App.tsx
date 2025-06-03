@@ -18,6 +18,7 @@ function App() {
 
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       setUser(user);
+      console.log(user)
       setLoading(false);
     })
 
@@ -30,8 +31,8 @@ function App() {
 
   return (
     <>
-    <SearchBar />
-    {user ? <GroceryList /> : <SignInPage />}
+
+    {user ? <SearchBar /> : <SignInPage />}
     </>
   )
 }

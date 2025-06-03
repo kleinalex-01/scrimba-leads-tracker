@@ -35,7 +35,7 @@ export default function SearchBar() {
     return (
         <>
         <div className="container my-3">
-            <div className="input-group mb-3">
+            <div className="input-group mb-3 position-relative">
                 <input
                     type="text"
                     className="form-control"
@@ -43,14 +43,23 @@ export default function SearchBar() {
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                 />
-                <div className=" my-3 container-fluid d-flex flex-column align-items-start">
+                <ul className="list-group position-absolute w-100 my-5 rounded z-3">
                     {suggestions.map(item => (
-                        <button className="d-flex" key={item.name} >
-                            <img src={item.icon} alt={item.name} width={24}/>
-                            <span className="mx-3">{item.name}</span>
-                        </button>
+                        <li key={item.name}
+                            className="list-group-item d-flex justify-content-between align-items-center"
+                            style={{ cursor: "pointer" }}
+                        >
+                        <img
+                            src={item.icon}
+                            alt={item.name}
+                            className="me-2 bg-white"
+                            style={{ width: 24, height: 24 }}
+                        />
+                            {item.name}
+                        </li>
                     ))}
-                </div>
+
+                </ul>
             </div>
 
         </div>
