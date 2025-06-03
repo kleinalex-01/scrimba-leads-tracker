@@ -3,9 +3,8 @@ import { useEffect, useState } from 'react'
 import { getAnalytics } from "firebase/analytics";
 import { firebaseApp } from './firebaseConfig'
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
-import { GroceryList } from './assets/GroceryList/GroceryList'
-import SearchBar from './assets/SearchSuggestions/SearchSuggestion';
 import SignInPage from './assets/SignInPage/SignInPage';
+import SearchBar from './assets/SearchSuggestions/SearchSuggestion';
 
 function App() {
   const [user, setUser] = useState<any>(null);
@@ -31,8 +30,12 @@ function App() {
 
   return (
     <>
-
-    {user ? <SearchBar /> : <SignInPage />}
+    {user ? (
+      <>
+        <SearchBar />
+    
+      </>
+      ) : <SignInPage />}
     </>
   )
 }

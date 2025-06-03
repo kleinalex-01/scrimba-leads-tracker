@@ -11,7 +11,7 @@ export default function SignInPage() {
         e.preventDefault()
         try {
             await signInWithEmailAndPassword(auth, email, password)
-        } catch (err: any) {
+        } catch {
             setError("Hibás email vagy jelszó. Kérjük, próbáld újra.")
         }
     }
